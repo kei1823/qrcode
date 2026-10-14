@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f6f0">
+<title>QR 收藏冊</title>
+<style>
+:root{--bg:#f7f6f0;--paper:#fffefa;--ink:#262820;--muted:#77796f;--line:#e5e2d8;--green:#3e684b;--green-pale:#e8efe5;--red:#a94d32;--red-pale:#f7e9e2;--gold:#a9772f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input{font:inherit}button{cursor:pointer}
+.wrap{max-width:920px;margin:auto;padding:0 16px}
+header{background:#e9eee4;border-bottom:1px solid #dce3d7;padding:22px 0 18px}.topline{display:flex;justify-content:space-between;gap:12px;align-items:center}.eyebrow{font-size:10px;font-weight:800;letter-spacing:.17em;color:var(--green)}h1{font-size:28px;letter-spacing:-.04em;margin:7px 0 4px}.subtitle{font-size:12px;color:#656b60}.account{font-size:11px;color:var(--green);background:#ffffffb8;border:1px solid #d4dfd0;border-radius:999px;padding:7px 10px;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}.stat{background:#ffffffad;border:1px solid #dce3d7;border-radius:13px;padding:10px 13px}.stat strong{display:block;font-size:22px}.stat span{font-size:11px;color:var(--muted)}
+main{padding:17px 0 40px}.toolbar{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px}.tool{background:var(--paper);border:1px solid var(--line);border-radius:13px;text-align:left;padding:13px;color:var(--ink);font-weight:750}.tool .ico{font-size:18px;margin-right:7px}.tool small{display:block;color:var(--muted);font-weight:400;font-size:11px;margin:5px 0 0 27px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:15px;margin-bottom:14px}.panelhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}h2{font-size:15px;margin:0}.tiny{font-size:11px;color:var(--muted)}label{font-size:11px;color:#5d6258;font-weight:750;display:block;margin-bottom:5px}.field{width:100%;border:1px solid #dcd9cf;border-radius:9px;background:white;padding:11px 12px;font-size:13px;outline-color:var(--green);margin-bottom:10px;color:var(--ink)}.inline{display:flex;gap:8px}.inline .field{flex:1;min-width:0}.btn{border:0;border-radius:9px;background:var(--green);color:white;padding:10px 13px;font-size:12px;font-weight:750;white-space:nowrap}.btn.light{background:var(--green-pale);color:var(--green)}.btn.red{background:var(--red-pale);color:var(--red)}.btn.outline{background:transparent;border:1px solid var(--line);color:var(--ink)}.btn:disabled{opacity:.45;cursor:not-allowed}.notice{font-size:11px;line-height:1.55;color:var(--muted);margin-top:3px}.filters{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}.chip{border:1px solid var(--line);background:transparent;color:var(--muted);padding:7px 11px;border-radius:999px;font-size:11px}.chip.active{background:var(--green);color:#fff;border-color:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{border:1px solid var(--line);border-radius:13px;padding:11px;background:#fffefa;min-width:0}.cardtop{display:flex;gap:11px;align-items:center}.qr{width:86px;height:86px;border:1px solid var(--line);border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}.qr img,.qr canvas{max-width:100%;height:auto}.details{min-width:0;flex:1}.name{font-size:14px;font-weight:800;overflow-wrap:anywhere}.url{font-size:10px;color:var(--muted);margin-top:5px;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.pill{display:inline-block;margin-top:7px;border-radius:999px;background:#f3e9d7;color:var(--gold);font-size:10px;padding:4px 7px}.pill.used{background:var(--green-pale);color:var(--green)}.cardbuttons{display:flex;gap:6px;margin-top:10px}.cardbuttons .btn{flex:1;padding:8px 4px;font-size:10px}.empty{text-align:center;color:var(--muted);padding:27px 10px;font-size:12px;grid-column:1/-1}.empty b{display:block;font-size:27px;margin-bottom:7px}
+.syncbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.syncstatus{font-size:11px;color:var(--muted);line-height:1.5}.syncstatus strong{color:var(--green)}footer{text-align:center;color:#8a8b82;font-size:10px;padding:10px 0 22px}
+.modal{display:none;position:fixed;inset:0;background:#171a16d9;z-index:10;padding:15px;overflow:auto}.modalbox{max-width:500px;margin:5vh auto;background:var(--paper);border-radius:16px;padding:16px;color:var(--ink)}.modalbox h2{margin-bottom:12px}.video{width:100%;max-height:56vh;object-fit:cover;background:#111;border-radius:10px}.modalactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.modalactions .btn{flex:1}.modalnote{font-size:12px;color:var(--muted);line-height:1.6;margin:10px 0}
+#loginBox{display:none}.hide{display:none!important}
+@media(max-width:570px){.wrap{padding:0 12px}header{padding-top:19px}h1{font-size:25px}.stats{gap:6px}.stat{padding:9px}.stat strong{font-size:20px}.cards{grid-template-columns:1fr}.card{padding:12px}.qr{width:92px;height:92px}.panel{padding:13px}.toolbar{gap:7px}.tool{padding:11px;font-size:12px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+ <div class="topline"><div><div class="eyebrow">YOUR QR COLLECTION</div><h1>QR 收藏冊 ✳</h1><div class="subtitle">把 QR Code 收好，使用狀態一目了然。</div></div><div id="accountBadge" class="account">本機模式</div></div>
+ <div class="stats"><div class="stat"><strong id="total">0</strong><span>收藏總數</span></div><div class="stat"><strong id="unused">0</strong><span>尚未使用</span></div><div class="stat"><strong id="used">0</strong><span>已使用</span></div></div>
+</div></header>
+<main class="wrap">
+ <div class="syncbar"><div id="syncStatus" class="syncstatus">資料儲存在此瀏覽器。設定 Firebase 後可開啟雲端同步。</div><button class="btn light" id="syncBtn" onclick="handleAuth()">登入同步</button></div>
+ <div class="toolbar">
+  <button class="tool" onclick="openCamera()"><span class="ico">▦</span>相機掃描 QR<small>直接讀取 QR 內容並新增</small></button>
+  <button class="tool" onclick="document.getElementById('photoInput').click()"><span class="ico">▧</span>從相簿辨識<small>選取 QR 圖片或拍照</small></button>
+ </div>
+ <section class="panel">
+  <div class="panelhead"><h2>＋ 新增收藏</h2><span class="tiny">網址／文字內容</span></div>
+  <label for="nameInput">收藏名稱</label><input id="nameInput" class="field" maxlength="90" placeholder="例如：咖啡兌換券、活動 QR">
+  <label for="urlInput">QR Code 網址或內容</label>
+  <div class="inline"><input id="urlInput" class="field" placeholder="貼上網址或 QR 內容" style="margin-bottom:5px"><button class="btn" onclick="addItem()">新增</button></div>
+  <div class="notice">貼上網址後會自動產生 QR 圖。掃描或辨識照片成功後，也可以再輸入名稱。</div>
+ </section>
+ <section class="panel">
+  <div class="panelhead"><h2>我的收藏</h2><span class="tiny" id="countLabel">0 筆</span></div>
+  <input id="search" class="field" placeholder="搜尋名稱或內容…" oninput="render()" style="margin-bottom:5px">
+  <div class="filters"><button class="chip active" onclick="setFilter('all',this)">全部</button><button class="chip" onclick="setFilter('unused',this)">尚未使用</button><button class="chip" onclick="setFilter('used',this)">已使用</button></div>
+  <div id="cards" class="cards"></div>
+ </section>
+ <div class="inline"><button class="btn light" onclick="exportData()">匯出備份</button><button class="btn light" onclick="document.getElementById('importInput').click()">匯入備份</button><button class="btn outline" onclick="clearLocal()">清空收藏</button></div>
+ <input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
+ <input type="file" id="importInput" accept=".json,application/json" hidden>
+ <p class="notice">相機功能需使用 HTTPS 並允許相機權限。雲端同步需先完成下方部署說明中的 Firebase 設定；尚未設定時網站仍可用本機模式測試。</p>
+</main>
+<footer class="wrap">QR COLLECTION BOOK · v2</footer>
+<div id="cameraModal" class="modal"><div class="modalbox"><h2>相機掃描</h2><video id="video" class="video" autoplay playsinline></video><div id="cameraMsg" class="modalnote">正在啟動相機…</div><div class="modalactions"><button class="btn" onclick="stopCamera()">關閉相機</button><button class="btn light" onclick="document.getElementById('photoInput').click()">改用相簿</button></div></div></div>
+<div id="qrModal" class="modal"><div class="modalbox"><h2 id="largeTitle">QR Code</h2><div id="largeQr" style="display:flex;justify-content:center;padding:12px;background:#fff;border-radius:12px"></div><div id="largeUrl" class="modalnote" style="overflow-wrap:anywhere"></div><div class="modalactions"><button class="btn" onclick="document.getElementById('qrModal').style.display='none'">完成</button></div></div></div>
+<div id="loginModal" class="modal"><div class="modalbox"><h2>開啟雲端同步</h2><p class="modalnote">先在程式碼中填入 Firebase 設定，再使用 Google 帳號登入。雲端資料會依登入帳號分開保存。</p><div id="loginMessage" class="modalnote"></div><div class="modalactions"><button class="btn" onclick="googleLogin()">使用 Google 登入</button><button class="btn light" onclick="document.getElementById('loginModal').style.display='none'">稍後再說</button></div></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// 1) Create a Firebase project and paste your web app config below.
+// Keep the app in local-only mode until all values are filled in.
+const firebaseConfig = {
+  apiKey: "PASTE_API_KEY",
+  authDomain: "PASTE_PROJECT_ID.firebaseapp.com",
+  projectId: "PASTE_PROJECT_ID",
+  appId: "PASTE_APP_ID"
+};
+const firebaseReady = firebaseConfig.apiKey !== "PASTE_API_KEY" &&
+                      firebaseConfig.projectId !== "PASTE_PROJECT_ID" &&
+                      firebaseConfig.appId !== "PASTE_APP_ID";
+let auth=null, db=null, user=null, unsubscribe=null, cloudReady=false;
+if(firebaseReady){
+ try {
+  const app=initializeApp(firebaseConfig); auth=getAuth(app); db=getFirestore(app);
+  onAuthStateChanged(auth, async u=>{
+   user=u;
+   if(unsubscribe){unsubscribe();unsubscribe=null;}
+   if(u){
+    cloudReady=true;document.getElementById('accountBadge').textContent=(u.displayName||u.email||'已登入').split(' ')[0];
+    document.getElementById('syncBtn').textContent='登出';
+    document.getElementById('syncStatus').innerHTML='<strong>雲端同步已連線</strong> · 收藏會同步至此 Google 帳號';
+    const q=query(collection(db,'users',u.uid,'items'),orderBy('created','desc'));
+    unsubscribe=onSnapshot(q,snap=>{items=snap.docs.map(d=>({id:d.id,...d.data()}));render();},err=>{document.getElementById('syncStatus').textContent='同步讀取失敗：'+err.message;});
+   } else {
+    cloudReady=false;document.getElementById('accountBadge').textContent='本機模式';
+    document.getElementById('syncBtn').textContent='登入同步';
+    document.getElementById('syncStatus').textContent='尚未登入，資料只存在此瀏覽器。';
+   }
+  });
+ } catch(e){console.error(e);document.getElementById('syncStatus').textContent='Firebase 初始化失敗，請檢查設定。';}
+} else {
+ document.getElementById('syncBtn').textContent='設定同步';
+ document.getElementById('syncStatus').textContent='目前為本機模式。完成 Firebase 設定後，即可跨裝置同步。';
+}
+window.handleAuth=async()=>{if(!firebaseReady){document.getElementById('loginMessage').textContent='尚未填入 Firebase 設定。請依部署說明編輯 index.html 中的 firebaseConfig。';document.getElementById('loginModal').style.display='block';return;}if(user){if(confirm('要登出雲端同步嗎？'))await signOut(auth);}else{document.getElementById('loginModal').style.display='block';}};
+window.googleLogin=async()=>{if(!firebaseReady)return;try{await signInWithPopup(auth,new GoogleAuthProvider());document.getElementById('loginModal').style.display='none';}catch(e){document.getElementById('loginMessage').textContent='登入失敗：'+e.message;}};
+window.cloudSave=async item=>{if(cloudReady&&user){await setDoc(doc(db,'users',user.uid,'items',item.id),item);}else{localStorage.setItem('qr_collection_v2',JSON.stringify(items));}};
+window.cloudDelete=async id=>{if(cloudReady&&user){await deleteDoc(doc(db,'users',user.uid,'items',id));}else{localStorage.setItem('qr_collection_v2',JSON.stringify(items));}};
+</script>
+<script>
+let items=[];try{items=JSON.parse(localStorage.getItem('qr_collection_v2')||'[]')}catch(e){items=[]}
+let filter='all',stream=null,scanning=false;
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function render(){
+ $('total').textContent=items.length;$('used').textContent=items.filter(x=>x.used).length;$('unused').textContent=items.filter(x=>!x.used).length;
+ const term=$('search').value.trim().toLowerCase();
+ const list=items.filter(x=>(filter==='all'||(filter==='used'?x.used:!x.used))&&(String(x.name+' '+x.url).toLowerCase().includes(term)));
+ $('countLabel').textContent=list.length+' 筆';const root=$('cards');root.innerHTML='';
+ if(!list.length){root.innerHTML='<div class="empty"><b>▦</b>'+(items.length?'沒有符合的收藏':'收藏冊還是空的，新增第一張 QR Code 吧！')+'</div>';return;}
+ list.forEach(x=>{
+  const card=document.createElement('article');card.className='card';
+  card.innerHTML=`<div class="cardtop"><div class="qr" id="qr-${esc(x.id)}"></div><div class="details"><div class="name">${esc(x.name||'未命名收藏')}</div><div class="url">${esc(x.url)}</div><span class="pill ${x.used?'used':''}">${x.used?'✓ 已使用':'○ 尚未使用'}</span></div></div><div class="cardbuttons"><button class="btn light" onclick="toggleUsed('${esc(x.id)}')">${x.used?'改未使用':'標記使用'}</button><button class="btn light" onclick="renameItem('${esc(x.id)}')">改名稱</button><button class="btn red" onclick="removeItem('${esc(x.id)}')">刪除</button></div><div class="cardbuttons"><button class="btn outline" onclick="openUrl('${esc(x.id)}')">開啟內容</button><button class="btn outline" onclick="showQR('${esc(x.id)}')">放大 QR</button></div>`;
+  root.appendChild(card);
+  const qr=$('qr-'+x.id);if(window.QRCode){new QRCode(qr,{text:String(x.url),width:80,height:80,colorDark:'#20231f',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});}else{qr.textContent='QR';}
+ });
+}
+function persist(){localStorage.setItem('qr_collection_v2',JSON.stringify(items));render();}
+async function saveItem(x){if(window.cloudSave){try{await window.cloudSave(x)}catch(e){alert('雲端儲存失敗：'+e.message);return;}}else{persist();return;}if(!document.getElementById('syncStatus').innerText.includes('雲端同步已連線'))persist();}
+window.addItem=async(urlArg,nameArg)=>{
+ const url=(urlArg!==undefined?urlArg:$('urlInput').value).trim();if(!url){alert('請先輸入 QR Code 網址或內容。');return;}
+ const name=(nameArg!==undefined?nameArg:$('nameInput').value).trim()||'未命名收藏';
+ const x={id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),name,url,used:false,created:Date.now()};
+ items.unshift(x);$('urlInput').value='';$('nameInput').value='';persist();await saveItem(x);
+};
+window.toggleUsed=async id=>{const x=items.find(y=>y.id===id);if(!x)return;x.used=!x.used;x.updated=Date.now();persist();await saveItem(x);};
+window.renameItem=async id=>{const x=items.find(y=>y.id===id);if(!x)return;const n=prompt('收藏名稱：',x.name);if(n===null||!n.trim())return;x.name=n.trim();x.updated=Date.now();persist();await saveItem(x);};
+window.removeItem=async id=>{const x=items.find(y=>y.id===id);if(!x||!confirm(`確定刪除「${x.name}」？`))return;items=items.filter(y=>y.id!==id);persist();if(window.cloudDelete){try{await window.cloudDelete(id)}catch(e){alert('雲端刪除失敗：'+e.message)}}};
+window.openUrl=id=>{const x=items.find(y=>y.id===id);if(!x)return;try{const u=new URL(x.url);if(['http:','https:'].includes(u.protocol)){window.open(u.href,'_blank','noopener');return;}}catch(e){}alert('這筆 QR 內容不是一般網址：\\n'+x.url);};
+window.showQR=id=>{const x=items.find(y=>y.id===id);if(!x)return;$('largeTitle').textContent=x.name;$('largeQr').innerHTML='';$('largeUrl').textContent=x.url;new QRCode($('largeQr'),{text:String(x.url),width:250,height:250});$('qrModal').style.display='block';};
+window.setFilter=(f,b)=>{filter=f;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');render();};
+window.exportData=()=>{const blob=new Blob([JSON.stringify(items,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='qr-collection-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
+window.clearLocal=()=>{if(!confirm('確定清空目前顯示的所有收藏？若已登入雲端，請逐筆刪除雲端資料；這個按鈕只清除本機備份。'))return;items=[];persist();};
+$('importInput').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!Array.isArray(data))throw Error();if(!confirm(`匯入 ${data.length} 筆資料並取代目前清單？`))return;items=data.filter(x=>x&&x.url).map(x=>({id:x.id||Date.now().toString(36)+Math.random().toString(36).slice(2,7),name:String(x.name||'未命名收藏'),url:String(x.url),used:!!x.used,created:x.created||Date.now()}));persist();for(const x of items)await saveItem(x);alert('匯入完成');}catch(err){alert('檔案格式不正確。')}e.target.value='';});
+async function decodeImage(file){if(!window.jsQR){throw Error('照片辨識元件載入失敗，請確認網路。')}const bmp=await createImageBitmap(file);const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});const max=1800,scale=Math.min(1,max/Math.max(bmp.width,bmp.height));canvas.width=Math.round(bmp.width*scale);canvas.height=Math.round(bmp.height*scale);ctx.drawImage(bmp,0,0,canvas.width,canvas.height);const image=ctx.getImageData(0,0,canvas.width,canvas.height);const code=jsQR(image.data,image.width,image.height,{inversionAttempts:'attemptBoth'});if(!code)throw Error('沒有辨識到 QR Code，請選擇更清晰、完整的照片。');return code.data;}
+$('photoInput').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const val=await decodeImage(f);const n=prompt('為這筆 QR Code 命名：','相簿 QR Code');if(n!==null)await addItem(val,n);}catch(err){alert(err.message||'照片辨識失敗。')}e.target.value='';});
+window.openCamera=async()=>{$('cameraModal').style.display='block';$('cameraMsg').textContent='正在啟動相機…';if(!navigator.mediaDevices?.getUserMedia){$('cameraMsg').textContent='瀏覽器不支援相機，請改用相簿圖片或網址。';return;}try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});const v=$('video');v.srcObject=stream;await v.play();scanning=true;$('cameraMsg').textContent='將 QR Code 對準畫面，辨識成功後會自動新增。';scanLoop();}catch(e){$('cameraMsg').textContent='無法開啟相機。請確認權限並使用 HTTPS，或改用相簿圖片。';}};
+async function scanLoop(){if(!scanning)return;const v=$('video');if(v.readyState>=2){try{const c=document.createElement('canvas'),ctx=c.getContext('2d',{willReadFrequently:true});c.width=v.videoWidth;c.height=v.videoHeight;ctx.drawImage(v,0,0,c.width,c.height);const d=ctx.getImageData(0,0,c.width,c.height);const code=window.jsQR?.(d.data,d.width,d.height,{inversionAttempts:'attemptBoth'});if(code?.data){scanning=false;const value=code.data;stopCamera();const n=prompt('為這筆 QR Code 命名：','相機掃描 QR');if(n!==null)await addItem(value,n);return;}}catch(e){}}if(scanning)requestAnimationFrame(scanLoop);}
+window.stopCamera=()=>{scanning=false;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}$('video').srcObject=null;$('cameraModal').style.display='none';};
+render();
+</script>
+</body></html>
